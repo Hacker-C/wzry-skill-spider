@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>王者荣耀英雄技能查询</title>
+  <link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css" />
+  <script src="https://unpkg.com/@akrc/nashi@0.2.2/dist/legacy.js"></script>
+  <script src="https://unpkg.com/twind/twind.umd.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <h1>王者荣耀英雄技能查询</h1>
+    <div class="search">
+      <input type="text" placeholder="请输入英雄名称" class="hero" value="海月">
+      <button id="submit">提交</button>
+    </div>
+    <div class="tip">请输入英雄名称</div>
+    <div class="container"></div>
+  </div>
+  </div>
+  <script>
+    const $ = nashi
+    const app = $('#app')
+    const tw = twind.tw
+    const setup = twind.setup
+    function img(id) {
+      return `http://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/${id}/${id}-bigskin-1.jpg`
+    }
+    function changeBodyBg(id) {
+      $('body').style('backgroundImage', `url(${img(id)})`)
+    }
+    setup({
+      theme: {
+        extend: {
+          colors: {
+            primary: '#409eff',
+            success: '#67c23a',
+            second: '#ecf5ff',
+            gray: '#9ca3af',
+            error: '#f56c6c'
+          }
+        }
+      }
+    })
+  </script>
+  <script>
+    $('h1').class(`${tw('text-2xl text-primary text-center mb-5')}`)
+    $('body').class(`${tw('py-3 px-5 sm:py-10 sm:px-20 min-w-[330px]')}`)
+    $('body')
+      .style('backgroundRepeat', 'no-repeat')
+      .style('backgroundSize', 'cover')
+      .style('backgroundAttachment', 'fixed')
+    changeBodyBg(521)
+    $('.search').class(`${tw('text-center mb-5')}`)
+    const input = $('.hero').class(`${tw(
+      'h-10 w-48 sm:w-64 md:w-96 border-1 outline-none rounded px-2',
+      'focus:border-primary focus:border-1'
+    )}`)
+    const submit = $('#submit').class(`${tw(
+      'text-primary',
+      'h-10 w-20 ml-2 bg-second',
+      'border-1 border-primary rounded',
+      'hover:bg-primary hover:text-white active:outline-none focus:outline-none'
+    )}`)
+    const container = $('.container').class((`${tw('bg-second opacity-70')}`))
+    const tip = $('.tip').class(`${tw('text-success text-center h-10')}`)
+
+    submit.click(() => {
+      const heroNameText = input.value()
+      const heroName = heroNameText.trim()
+      if (!heroName || heroName === '') {
+        tip.text('输入不能为空！').addClass(`${tw('text-error')}`)
+        return
+      }
+      tip.text('正在加载中...').removeClass(`${tw('text-error')}`)
+      // 根据英雄名字获取 ID
+      const p1 = new Promise((resolve, reject) => {
+        fetch('/hero?cname=' + heroName).then(res => {
+          return res.text()
+        }).then((heroId) => {
+          resolve(heroId)
+        }).catch((err) => {
+          reject(err)
+        })
+      })
+
+      // 根据 ID 爬取英雄技能数据
+      p1.then(heroId => {
+        fetch(`/skill?heroId=${heroId}`)
+          .then(res => res.json())
+          .then(async list => {
+            tip.text('爬取并解析数据成功！').removeClass(`${tw('text-error')}`)
+            changeBodyBg(heroId)
+            container.empty() // 清空 container
+            list.forEach((skill, idx) => {
+              // 每一个技能盒子
+              const box = $.create('div').class(`${tw('px-3 pt-5 sm:px-10 sm:pt-10')}`)
+              if (!skill.title) return
+              const img = $.create('img').attr('src', skill.imgUrl).class(`${tw('h-20')}`)
+              const title = $.create('span').text(skill.title + (idx === 0 ? '（被动）' : '')).class(`${tw('font-bold text-xl')}`)
+              const cd = $.create('span').text(skill.cd).class(`${tw('break-words')}`)
+              const cost = $.create('span').text(skill.cost)
+
+              const infoBox = $.create('div').class(`${tw('flex')}`)
+                .append(img) // 左
+                .append($.create('div').class(`${tw('ml-5')}`) // 右
+                  .append(title) // 右上
+                  .append($.create('div').class(`${tw('mt-5 border-b-2 border-dotted border-primary')}`)  // 右下
+                    .append(cd)
+                    .append(cost)))
+
+              // 技能描述
+              const desc = $.create('div').text('技能描述：' + skill.desc).class(`${tw('p-4 break-words')}`)
+              box.append(infoBox).append(desc)
+              container.append(box)
+            })
+          }).catch(err => {
+            tip.text('未查询到到数据，请检查输入！').addClass(`${tw('text-error')}`)
+          })
+      })
+    })
+
+    // 这里问就是强迫症，强行用 js 写
+    $('body').append(
+      $.create('div').class(`${tw('text-gray text-center text-white mt-2')}`)
+        .append($.create('span').text('Created by '))
+        .append($.create('a').text('MurphyChen').class(`${tw('hover:underline')}`).attr('target', '_blank').attr('href', 'https://mphy.me'))
+        .append($.create('span').text(' ©2022 | 湘ICP备 '))
+        .append($.create('a').text('2022004296 号').attr('target', '_blank').attr('href', 'https://beian.miit.gov.cn/')
+        )
+    )
+
+  </script>
+</body>
+
+</html>
