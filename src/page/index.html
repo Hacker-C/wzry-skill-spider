@@ -15,7 +15,7 @@
   <div id="app">
     <h1>王者荣耀英雄技能查询</h1>
     <div class="search">
-      <input type="text" placeholder="请输入英雄名称" class="hero" value="海月">
+      <input type="text" placeholder="请输入英雄名称" class="hero" value="安琪拉">
       <button id="submit">提交</button>
     </div>
     <div class="tip">请输入英雄名称</div>
@@ -54,7 +54,7 @@
       .style('backgroundRepeat', 'no-repeat')
       .style('backgroundSize', 'cover')
       .style('backgroundAttachment', 'fixed')
-    changeBodyBg(521)
+    changeBodyBg(142)
     $('.search').class(`${tw('text-center mb-5')}`)
     const input = $('.hero').class(`${tw(
       'h-10 w-48 sm:w-64 md:w-96 border-1 outline-none rounded px-2',
@@ -103,7 +103,7 @@
               const img = $.create('img').attr('src', skill.imgUrl).class(`${tw('h-20')}`)
               const title = $.create('span').text(skill.title + (idx === 0 ? '（被动）' : '')).class(`${tw('font-bold text-xl')}`)
               const cd = $.create('span').text(skill.cd).class(`${tw('break-words')}`)
-              const cost = $.create('span').text(skill.cost)
+              const cost = $.create('span').text(skill.cost).class(`${tw('ml-2')}`)
 
               const infoBox = $.create('div').class(`${tw('flex')}`)
                 .append(img) // 左
@@ -128,7 +128,7 @@
     $('body').append(
       $.create('div').class(`${tw('text-gray text-center text-white mt-2')}`)
         .append($.create('span').text('Created by '))
-        .append($.create('a').text('MurphyChen').class(`${tw('hover:underline')}`).attr('target', '_blank').attr('href', 'https://mphy.me'))
+        .append($.create('a').text('MurphyChen').class(`${tw('hover:underline')}`).attr('target', '_blank').attr('href', 'https://github.com/Hacker-C/wzry-skill-spider'))
         .append($.create('span').text(' ©2022 | 湘ICP备 '))
         .append($.create('a').text('2022004296 号').attr('target', '_blank').attr('href', 'https://beian.miit.gov.cn/')
         )
