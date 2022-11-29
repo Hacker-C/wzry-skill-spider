@@ -15,7 +15,7 @@
   <div id="app">
     <h1>王者荣耀英雄技能查询</h1>
     <div class="search">
-      <input type="text" placeholder="请输入英雄名称" class="hero" value="安琪拉">
+      <input type="text" placeholder="请输入英雄名称" class="hero" value="宫本武藏">
       <button id="submit">提交</button>
     </div>
     <div class="tip">请输入英雄名称</div>
@@ -54,7 +54,7 @@
       .style('backgroundRepeat', 'no-repeat')
       .style('backgroundSize', 'cover')
       .style('backgroundAttachment', 'fixed')
-    changeBodyBg(142)
+    changeBodyBg(130)
     $('.search').class(`${tw('text-center mb-5')}`)
     const input = $('.hero').class(`${tw(
       'h-10 w-48 sm:w-64 md:w-96 border-1 outline-none rounded px-2',
@@ -125,14 +125,18 @@
     })
 
     // 这里问就是强迫症，强行用 js 写
-    $('body').append(
-      $.create('div').class(`${tw('text-gray text-center text-white mt-2')}`)
-        .append($.create('span').text('Created by '))
-        .append($.create('a').text('MurphyChen').class(`${tw('hover:underline')}`).attr('target', '_blank').attr('href', 'https://github.com/Hacker-C/wzry-skill-spider'))
-        .append($.create('span').text(' ©2022 | 湘ICP备 '))
-        .append($.create('a').text('2022004296 号').attr('target', '_blank').attr('href', 'https://beian.miit.gov.cn/')
-        )
-    )
+    $('body')
+      .append($.create('div').class(`${tw('text-gray text-center text-white mt-2')}`)
+        .append($.create('span').text('Created by MurphyChen ©2022 | 基于 Nodejs 爬取王者荣耀英雄技能信息'))
+      )
+      .append(
+        $.create('div').class(`${tw('text-gray text-center text-white')}`)
+          .append($.create('span').text('源码地址：'))
+          .append($.create('a').text('Hacker-C/wzry-skill-spider').class(`${tw('hover:underline')}`).attr('target', '_blank').attr('href', 'https://github.com/Hacker-C/wzry-skill-spider'))
+          .append($.create('span').text(' | 湘ICP备 '))
+          .append($.create('a').text('2022004296 号').attr('target', '_blank').attr('href', 'https://beian.miit.gov.cn/')
+          )
+      )
 
   </script>
 </body>
